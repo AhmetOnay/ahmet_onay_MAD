@@ -18,10 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
@@ -56,6 +53,7 @@ fun MyApp() {
                         DropdownMenuItem(onClick = {
                             Log.d("ScaffoldDropDownMenuItemFavorites", "Clicked")
                         }) {
+                            Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favourites Icon DropDown")
                             Text(text = "Favorites")
                         }
                     }
