@@ -41,7 +41,7 @@ fun MyApp() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Movies") },
+                title = { Text(text = "Moviess") },
                 actions = {
                     IconButton(onClick = { expanded = true }) {
                         Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu Icon")
