@@ -40,6 +40,7 @@ fun HomeScreen(navController: NavHostController) {
                     ) {
                         DropdownMenuItem(onClick = {
                             Log.d("ScaffoldDropDownMenuItemFavorites", "Clicked")
+                            navController.navigate(route = "favoritescreen")
                         }) {
                             Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favourites Icon DropDown")
                             Text(text = "Favorites")

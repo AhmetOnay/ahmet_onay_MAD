@@ -27,22 +27,10 @@ fun DetailScreen(
     navController: NavHostController,
     movies: List<Movie> = getMovies()
 ) {
-    var expanded by remember { mutableStateOf(false) }
     val selectedMovie = movies.find { it.id == movieId }
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    if (selectedMovie != null) {
-                        Text(text = selectedMovie.title)
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
+            SimpleAppBar(title = selectedMovie?.title, onBackPressed = { navController.popBackStack() })
         },
         content = { padding ->
             Log.d("Padding Values", "$padding")
@@ -101,6 +89,24 @@ fun DetailScreen(
                         }
                     }
                 }
+            }
+        }
+    )
+}
+@Composable
+fun SimpleAppBar(
+    title: String?,
+    onBackPressed: () -> Unit
+) {
+    TopAppBar(
+        title = {
+            if (title != null) {
+                Text(text = title)
+            }
+        },
+        navigationIcon = {
+            IconButton(onClick = onBackPressed) {
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
             }
         }
     )
