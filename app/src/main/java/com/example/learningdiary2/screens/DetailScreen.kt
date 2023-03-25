@@ -73,12 +73,12 @@ fun DetailScreen(
                         Text(
                             text = "Images",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
+                            fontSize = 18.sp,
                             modifier = Modifier.padding(top = 16.dp)
                         )
                         LazyRow(
                             modifier = Modifier.fillMaxWidth(),
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp)
+                            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp)
                         ) {
                             if (selectedMovie != null) {
                                 items(items = selectedMovie.images) { movieImage ->
