@@ -19,13 +19,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.learningdiary2.navigation.Screen
+import com.example.learningdiary2.vm.MovieViewModel
 import com.example.testapp.models.Movie
-import com.example.testapp.models.getMovies
 
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController, movieViewModel: MovieViewModel) {
     var expanded by remember { mutableStateOf(false) }
+    val movies = remember { movieViewModel.movieList } ?: emptyList()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -40,10 +42,17 @@ fun HomeScreen(navController: NavHostController) {
                     ) {
                         DropdownMenuItem(onClick = {
                             Log.d("ScaffoldDropDownMenuItemFavorites", "Clicked")
-                            navController.navigate(route = "favoritescreen")
+                            navController.navigate(Screen.Favorites.route)
                         }) {
                             Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favourites Icon DropDown")
                             Text(text = "Favorites")
+                        }
+                        DropdownMenuItem(onClick = {
+                            Log.d("ScaffoldDropDownMenuItemAddMovie", "Clicked")
+                            navController.navigate(route = Screen.AddMovie.route)
+                        }) {
+                            Icon(imageVector = Icons.Default.Add, contentDescription = "Add Icon DropDown")
+                            Text(text = "Add Movie")
                         }
                     }
                 }
@@ -54,9 +63,8 @@ fun HomeScreen(navController: NavHostController) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
             ) {
-                MyList(navController = navController)
+                MyList(movies,navController = navController, viewModel = movieViewModel)
             }
         }
     )
@@ -68,19 +76,20 @@ fun Greeting(name: String) {
 }
 
 @Composable
-fun MyList(movies: List<Movie> = getMovies(), navController: NavHostController) {
-
+fun MyList(movies: List<Movie>, navController: NavHostController, viewModel: MovieViewModel) {
     LazyColumn {
-        items(items = movies) { movie ->
-            MovieRow(movie = movie) {
-                navController.navigate(route = "detailscreen/${movie.id}")
-            }
+        items(movies) { movie ->
+            MovieRow(
+                movie = movie,
+                onItemClick = { navController.navigate("detailscreen/${movie.id}") },
+                onFavClick = { viewModel.toggleFavorite(movie) }
+            )
         }
     }
 }
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick: (Any?) -> Unit = {}) {
+fun MovieRow(movie: Movie, onItemClick: (Any?) -> Unit = {}, onFavClick: (Movie) -> Unit) {
     var isArrowUp by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -96,22 +105,28 @@ fun MovieRow(movie: Movie, onItemClick: (Any?) -> Unit = {}) {
                     .height(150.dp)
                     .fillMaxWidth()
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(model = movie.images.first()),
-                    contentDescription = "Movie Poster",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds
-                )
+                if (!movie.images.isNullOrEmpty()) {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = movie.images.first()),
+                        contentDescription = "Movie Poster",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.FillBounds
+                    )
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(10.dp),
                     contentAlignment = Alignment.TopEnd
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.FavoriteBorder,
-                        contentDescription = "Add to favorites"
-                    )
+                    IconButton(
+                        onClick = { onFavClick(movie) }
+                    ) {
+                        Icon(
+                            imageVector = if (movie.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = if (movie.isFavorite) "Remove from favorites" else "Add to favorites"
+                        )
+                    }
                 }
             }
 

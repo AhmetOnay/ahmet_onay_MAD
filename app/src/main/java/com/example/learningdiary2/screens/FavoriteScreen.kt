@@ -16,15 +16,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.learningdiary2.vm.MovieViewModel
 import com.example.testapp.models.Movie
 import com.example.testapp.models.getMovies
 
 @Composable
 fun FavoriteScreen(
     navController: NavHostController,
-    movies: List<Movie> = getMovies()
+    movieViewModel: MovieViewModel
 ) {
     Scaffold(
         topBar = {
@@ -35,7 +37,6 @@ fun FavoriteScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
             ) {
                 Column(
                     modifier = Modifier
@@ -43,11 +44,10 @@ fun FavoriteScreen(
                         .background(MaterialTheme.colors.background)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    val favoriteMovieIds = listOf("tt2707408", "tt0903747", "tt2306299")
-                    val favoriteMovies = favoriteMovieIds.mapNotNull { id ->
-                        movies.find { it.id == id }
+                    val favoriteMovies = remember {
+                        movieViewModel.getFavoriteMovies()
                     }
-                    MyList(navController = navController, movies = favoriteMovies)
+                    MyList(navController = navController, movies = favoriteMovies, viewModel = movieViewModel)
                 }
             }
         }

@@ -16,8 +16,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.learningdiary2.vm.MovieViewModel
 import com.example.testapp.models.Movie
 import com.example.testapp.models.getMovies
 
@@ -25,19 +27,20 @@ import com.example.testapp.models.getMovies
 fun DetailScreen(
     movieId: String?,
     navController: NavHostController,
-    movies: List<Movie> = getMovies()
+    movieViewModel: MovieViewModel
 ) {
-    val selectedMovie = movies.find { it.id == movieId }
+    val selectedMovie = movieId?.let { movieViewModel.getSelectedMovie(it) }
     Scaffold(
         topBar = {
-            SimpleAppBar(title = selectedMovie?.title, onBackPressed = { navController.popBackStack() })
+            SimpleAppBar(
+                title = selectedMovie?.title,
+                onBackPressed = { navController.popBackStack() })
         },
         content = { padding ->
             Log.d("Padding Values", "$padding")
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
             ) {
                 if (movieId != null) {
                     Column(
@@ -48,14 +51,14 @@ fun DetailScreen(
                     ) {
                         /*Text(
                             text = "Hello detailscreen $movieId",
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Bold,s
                             fontSize = 20.sp,
                             modifier = Modifier.padding(top = 8.dp)
                         )*/
 
                         if (selectedMovie != null) {
-                            MovieRow(movie = selectedMovie){
-                                Log.d("DetailScreen","PosterClicked");
+                            MovieRow(movie = selectedMovie) {
+                                Log.d("DetailScreen", "PosterClicked");
                             }
                         }
                         Text(
@@ -93,6 +96,7 @@ fun DetailScreen(
         }
     )
 }
+
 @Composable
 fun SimpleAppBar(
     title: String?,

@@ -3,15 +3,15 @@ package com.example.testapp.models
 import Genre
 
 data class Movie(
-    val id: String,
-    val title: String,
-    val year: String,
-    val genre: List<Genre>,
-    val director: String,
-    val actors: String,
-    val plot: String,
-    val images: List<String>,
-    val rating: Float = 0f,
+    var id: String ="",
+    var title: String ="",
+    var year: String ="",
+    var genre: List<Genre> = emptyList(),
+    var director: String = "",
+    var actors: String = "",
+    var plot: String ="",
+    val images: List<String> = listOf("https://cdn.maikoapp.com/3d4b/4quqa/150.jpg"),
+    var rating: Float = 0f,
     var isFavorite: Boolean = false
 )
 
