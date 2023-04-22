@@ -155,8 +155,9 @@ class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
         shouldEnabledAddMovieButton()
     }
 
-    fun toggleFavorite(movie: Movie) {
+    suspend fun toggleFavorite(movie: Movie) {
         movie.isFavorite = !movie.isFavorite
+        repository.update(movie);
     }
 
     fun getFavoriteMovies(): List<Movie> {

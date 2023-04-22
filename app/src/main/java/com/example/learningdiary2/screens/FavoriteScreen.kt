@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +23,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.learningdiary2.vm.MovieViewModel
 import com.example.learningdiary2.models.Movie
 import com.example.learningdiary2.models.getMovies
+import com.example.learningdiary2.utils.InjectorUtils
 
 @Composable
 fun FavoriteScreen(
@@ -44,9 +46,8 @@ fun FavoriteScreen(
                         .background(MaterialTheme.colors.background)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    val favoriteMovies = remember {
-                        movieViewModel.getFavoriteMovies()
-                    }
+                    val favoriteMovies = movieViewModel.getFavoriteMovies()
+
                     MyList(navController = navController, movies = favoriteMovies, viewModel = movieViewModel)
                 }
             }

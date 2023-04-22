@@ -25,6 +25,7 @@ import com.example.learningdiary2.navigation.Screen
 import com.example.learningdiary2.vm.MovieViewModel
 import com.example.learningdiary2.models.Movie
 import com.example.learningdiary2.utils.InjectorUtils
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -33,7 +34,6 @@ fun HomeScreen(navController: NavHostController, movieViewModel: MovieViewModel)
     val viewModel: MovieViewModel = viewModel(factory = InjectorUtils.provideMovieViewModelFactory(
         LocalContext.current))
     val moviesState by viewModel.movieList.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -83,12 +83,15 @@ fun Greeting(name: String) {
 
 @Composable
 fun MyList(movies: List<Movie>, navController: NavHostController, viewModel: MovieViewModel) {
+    val coroutineScope = rememberCoroutineScope()
     LazyColumn {
         items(movies) { movie ->
             MovieRow(
                 movie = movie,
                 onItemClick = { navController.navigate("detailscreen/${movie.id}") },
-                onFavClick = { viewModel.toggleFavorite(movie) }
+                onFavClick = {  coroutineScope.launch {
+                    viewModel.toggleFavorite(movie)
+                }}
             )
         }
     }
