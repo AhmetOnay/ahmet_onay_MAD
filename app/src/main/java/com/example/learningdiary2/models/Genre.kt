@@ -1,3 +1,4 @@
+package com.example.learningdiary2.models
 enum class Genre {
     ACTION,
     ADVENTURE,

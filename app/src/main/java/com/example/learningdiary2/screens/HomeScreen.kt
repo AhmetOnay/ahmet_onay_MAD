@@ -16,18 +16,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.learningdiary2.navigation.Screen
 import com.example.learningdiary2.vm.MovieViewModel
-import com.example.testapp.models.Movie
+import com.example.learningdiary2.models.Movie
+import com.example.learningdiary2.utils.InjectorUtils
 
 
 @Composable
 fun HomeScreen(navController: NavHostController, movieViewModel: MovieViewModel) {
     var expanded by remember { mutableStateOf(false) }
-    val movies = remember { movieViewModel.movieList } ?: emptyList()
+    val viewModel: MovieViewModel = viewModel(factory = InjectorUtils.provideMovieViewModelFactory(
+        LocalContext.current))
+    val moviesState by viewModel.movieList.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,7 +70,7 @@ fun HomeScreen(navController: NavHostController, movieViewModel: MovieViewModel)
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                MyList(movies,navController = navController, viewModel = movieViewModel)
+                MyList(moviesState,navController = navController, viewModel = movieViewModel)
             }
         }
     )

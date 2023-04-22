@@ -20,8 +20,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.learningdiary2.vm.MovieViewModel
-import com.example.testapp.models.Movie
-import com.example.testapp.models.getMovies
+import com.example.learningdiary2.models.Movie
+import com.example.learningdiary2.models.getMovies
 
 @Composable
 fun FavoriteScreen(

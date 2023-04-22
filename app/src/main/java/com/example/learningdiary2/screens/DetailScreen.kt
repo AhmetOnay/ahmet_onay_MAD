@@ -13,6 +13,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,8 +21,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.learningdiary2.vm.MovieViewModel
-import com.example.testapp.models.Movie
-import com.example.testapp.models.getMovies
+import com.example.learningdiary2.models.Movie
+import com.example.learningdiary2.models.getMovies
+import com.example.learningdiary2.utils.InjectorUtils
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailScreen(
@@ -29,7 +32,9 @@ fun DetailScreen(
     navController: NavHostController,
     movieViewModel: MovieViewModel
 ) {
-    val selectedMovie = movieId?.let { movieViewModel.getSelectedMovie(it) }
+    val viewModel: MovieViewModel = viewModel(factory = InjectorUtils.provideMovieViewModelFactory(
+        LocalContext.current))
+    val selectedMovie = movieId?.let {  movieViewModel.getSelectedMovie(movieId) }
     Scaffold(
         topBar = {
             SimpleAppBar(

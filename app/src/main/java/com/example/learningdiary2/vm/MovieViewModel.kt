@@ -1,20 +1,24 @@
 package com.example.learningdiary2.vm
 
-import Genre
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.learningdiary2.models.Genre
 import com.example.learningdiary2.models.ListItemSelectable
-import com.example.testapp.models.Movie
-import com.example.testapp.models.getMovies
+import com.example.learningdiary2.repositories.MovieRepository
+import com.example.learningdiary2.models.Movie
+import com.example.learningdiary2.models.getMovies
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import java.util.*
 
-class MovieViewModel : ViewModel() {
-    private val _movieList = getMovies().toMutableStateList()
+class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
+    private val _movieList = MutableStateFlow(listOf<Movie>());
 
-    val movieList: List<Movie>
+    val movieList: MutableStateFlow<List<Movie>>
         get() = _movieList
 
 
@@ -57,7 +61,13 @@ class MovieViewModel : ViewModel() {
 
     var isEnabledAddMovieButton: MutableState<Boolean> = mutableStateOf(false)
 
-    init {}
+    init {
+        viewModelScope.launch {
+            repository.getAllMovies().collect{ movieList ->
+                _movieList.value = movieList
+            }
+        }
+    }
 
     private fun shouldEnabledAddMovieButton() {
         isEnabledAddMovieButton.value = title.value.isNotEmpty() && year.value.isNotEmpty()
@@ -150,16 +160,26 @@ class MovieViewModel : ViewModel() {
     }
 
     fun getFavoriteMovies(): List<Movie> {
-        return _movieList.filter { it.isFavorite }
+        var list = emptyList<Movie>()
+        viewModelScope.launch {
+            repository.getAllFavorite().collect{ movieList ->
+                list = movieList
+            }
+        }
+        return list;
     }
 
     fun getSelectedMovie(movieId: String): Movie? {
-        return _movieList.find { it.id == movieId }
+        movie
+        viewModelScope.launch {
+            movie = repository.getMovieById(movie.id)
+        }
+        return movie;
     }
 
     fun addMovie(navController: NavController) {
         var moviee: Movie = Movie()
-        moviee.id = (_movieList.size + 1).toString()
+        //moviee.id = _movieList.size + 1
         moviee.title = title.value;
         moviee.year = year.value
         val selectedGenreList = selectedGenres.value
@@ -170,7 +190,9 @@ class MovieViewModel : ViewModel() {
         moviee.actors = actors.value
         moviee.plot = plot.value
         moviee.rating = rating.value.toFloat()
-        _movieList.add(moviee)
+        viewModelScope.launch {
+            repository.add(moviee);
+        }
         resetForm()
         navController.popBackStack()
     }
