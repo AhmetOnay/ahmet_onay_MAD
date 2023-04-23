@@ -34,7 +34,12 @@ fun DetailScreen(
 ) {
     val viewModel: MovieViewModel = viewModel(factory = InjectorUtils.provideMovieViewModelFactory(
         LocalContext.current))
-    val selectedMovie = movieId?.let {  movieViewModel.getSelectedMovie(movieId) }
+    val coroutineScope = rememberCoroutineScope()
+    var selectedMovie: Movie = Movie()
+    movieId?.let {  { coroutineScope.launch {
+        selectedMovie = movieViewModel.getSelectedMovie(movieId)!!
+    }}}
+
     Scaffold(
         topBar = {
             SimpleAppBar(
