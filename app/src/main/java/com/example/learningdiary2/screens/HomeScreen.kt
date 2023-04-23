@@ -100,6 +100,9 @@ fun MyList(movies: List<Movie>, navController: NavHostController, viewModel: Mov
 @Composable
 fun MovieRow(movie: Movie, onItemClick: (Any?) -> Unit = {}, onFavClick: (Movie) -> Unit) {
     var isArrowUp by remember { mutableStateOf(false) }
+    var isFavorite by remember {
+        mutableStateOf(movie.isFavorite)
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -129,11 +132,14 @@ fun MovieRow(movie: Movie, onItemClick: (Any?) -> Unit = {}, onFavClick: (Movie)
                     contentAlignment = Alignment.TopEnd
                 ) {
                     IconButton(
-                        onClick = { onFavClick(movie) }
+                        onClick = {
+                            onFavClick(movie)
+                            isFavorite = !isFavorite
+                        }
                     ) {
                         Icon(
-                            imageVector = if (movie.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = if (movie.isFavorite) "Remove from favorites" else "Add to favorites"
+                            imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites"
                         )
                     }
                 }
