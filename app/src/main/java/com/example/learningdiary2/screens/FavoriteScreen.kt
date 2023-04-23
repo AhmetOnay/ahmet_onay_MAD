@@ -30,6 +30,10 @@ fun FavoriteScreen(
     navController: NavHostController,
     movieViewModel: MovieViewModel
 ) {
+    val viewModel: MovieViewModel = viewModel(factory = InjectorUtils.provideMovieViewModelFactory(
+        LocalContext.current))
+    val favoriteMovies by viewModel.favoriteMovieList.collectAsState()
+
     Scaffold(
         topBar = {
             SimpleAppBar(title = "FavoriteMovies", onBackPressed = { navController.popBackStack() })
@@ -46,8 +50,6 @@ fun FavoriteScreen(
                         .background(MaterialTheme.colors.background)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    val favoriteMovies = movieViewModel.getFavoriteMovies()
-
                     MyList(navController = navController, movies = favoriteMovies, viewModel = movieViewModel)
                 }
             }

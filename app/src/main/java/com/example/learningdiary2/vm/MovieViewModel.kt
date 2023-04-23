@@ -12,6 +12,9 @@ import com.example.learningdiary2.repositories.MovieRepository
 import com.example.learningdiary2.models.Movie
 import com.example.learningdiary2.models.getMovies
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -20,6 +23,11 @@ class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
 
     val movieList: MutableStateFlow<List<Movie>>
         get() = _movieList
+
+    private val _favoriteMovieList = MutableStateFlow(listOf<Movie>());
+
+    val favoriteMovieList: MutableStateFlow<List<Movie>>
+        get() = _favoriteMovieList
 
 
     private var movie: Movie = Movie()
@@ -65,6 +73,11 @@ class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
         viewModelScope.launch {
             repository.getAllMovies().collect{ movieList ->
                 _movieList.value = movieList
+            }
+        }
+        viewModelScope.launch {
+            repository.getAllFavorite().collect{ movieList ->
+                _favoriteMovieList.value = movieList
             }
         }
     }
@@ -158,16 +171,6 @@ class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
     suspend fun toggleFavorite(movie: Movie) {
         movie.isFavorite = !movie.isFavorite
         repository.update(movie);
-    }
-
-    fun getFavoriteMovies(): List<Movie> {
-        var list = emptyList<Movie>()
-        viewModelScope.launch {
-            repository.getAllFavorite().collect{ movieList ->
-                list = movieList
-            }
-        }
-        return list;
     }
 
     fun getSelectedMovie(movieId: String): Movie? {
