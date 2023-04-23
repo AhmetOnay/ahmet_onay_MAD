@@ -19,11 +19,10 @@ fun MyNavigation(){
     val navController = rememberNavController()
     val viewModel: MovieViewModel = viewModel(factory = InjectorUtils.provideMovieViewModelFactory(
         LocalContext.current))
-    //val movieViewModel = remember { MovieViewModel() }
 
     NavHost(navController = navController, startDestination = Screen.Home.route) {
-        composable(Screen.Home.route) { HomeScreen(navController = navController, viewModel) }
-        composable(Screen.Favorites.route) { FavoriteScreen(navController = navController, viewModel) }
+        composable(Screen.Home.route) { HomeScreen(navController = navController) }
+        composable(Screen.Favorites.route) { FavoriteScreen(navController = navController) }
         composable(Screen.AddMovie.route) { AddMovieScreen(navController = navController, viewModel) }
         composable(
             Screen.Details.route,

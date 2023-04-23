@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun HomeScreen(navController: NavHostController, movieViewModel: MovieViewModel) {
+fun HomeScreen(navController: NavHostController) {
     var expanded by remember { mutableStateOf(false) }
     val viewModel: MovieViewModel = viewModel(factory = InjectorUtils.provideMovieViewModelFactory(
         LocalContext.current))
@@ -70,7 +70,7 @@ fun HomeScreen(navController: NavHostController, movieViewModel: MovieViewModel)
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                MyList(moviesState,navController = navController, viewModel = movieViewModel)
+                MyList(moviesState,navController = navController, viewModel = viewModel)
             }
         }
     )

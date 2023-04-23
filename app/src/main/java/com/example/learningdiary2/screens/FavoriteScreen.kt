@@ -27,8 +27,7 @@ import com.example.learningdiary2.utils.InjectorUtils
 
 @Composable
 fun FavoriteScreen(
-    navController: NavHostController,
-    movieViewModel: MovieViewModel
+    navController: NavHostController
 ) {
     val viewModel: MovieViewModel = viewModel(factory = InjectorUtils.provideMovieViewModelFactory(
         LocalContext.current))
@@ -50,7 +49,7 @@ fun FavoriteScreen(
                         .background(MaterialTheme.colors.background)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    MyList(navController = navController, movies = favoriteMovies, viewModel = movieViewModel)
+                    MyList(navController = navController, movies = favoriteMovies, viewModel = viewModel)
                 }
             }
         }
